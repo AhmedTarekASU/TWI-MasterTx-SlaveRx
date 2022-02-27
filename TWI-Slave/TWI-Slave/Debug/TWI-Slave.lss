@@ -1,0 +1,162 @@
+
+TWI-Slave.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000c4  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000118  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000118  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000148  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000040  00000000  00000000  00000184  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000646  00000000  00000000  000001c4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000596  00000000  00000000  0000080a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000028b  00000000  00000000  00000da0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000064  00000000  00000000  0000102c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000032d  00000000  00000000  00001090  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000094  00000000  00000000  000013bd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000030  00000000  00000000  00001451  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a0 36       	cpi	r26, 0x60	; 96
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 54 00 	call	0xa8	; 0xa8 <main>
+  74:	0c 94 60 00 	jmp	0xc0	; 0xc0 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <i2c_initSlave>:
+void i2c_send(unsigned char data)
+{
+	TWDR = data;
+	TWCR |= (1<<TWINT)|(1<<TWEN);
+	while((TWCR&(1<<TWINT))==0);
+}
+  7c:	94 e0       	ldi	r25, 0x04	; 4
+  7e:	96 bf       	out	0x36, r25	; 54
+  80:	82 b9       	out	0x02, r24	; 2
+  82:	84 ec       	ldi	r24, 0xC4	; 196
+  84:	86 bf       	out	0x36, r24	; 54
+  86:	08 95       	ret
+
+00000088 <i2c_listen>:
+/*-------------------------------------------------------------------------------------------------------*/
+void i2c_listen()
+{
+	while((TWCR&(1<<TWINT))==0);
+  88:	06 b6       	in	r0, 0x36	; 54
+  8a:	07 fe       	sbrs	r0, 7
+  8c:	fd cf       	rjmp	.-6      	; 0x88 <i2c_listen>
+}
+  8e:	08 95       	ret
+
+00000090 <i2c_recieve>:
+/*-------------------------------------------------------------------------------------------------------*/
+unsigned char i2c_recieve(unsigned char isLast)
+{
+	if(isLast==0)
+  90:	81 11       	cpse	r24, r1
+  92:	03 c0       	rjmp	.+6      	; 0x9a <i2c_recieve+0xa>
+	{
+		TWCR = (1<<TWINT)|(1<<TWEN)|(1<<TWEA);
+  94:	84 ec       	ldi	r24, 0xC4	; 196
+  96:	86 bf       	out	0x36, r24	; 54
+  98:	02 c0       	rjmp	.+4      	; 0x9e <i2c_recieve+0xe>
+	}
+	else
+	{
+		TWCR = (1<<TWINT)|(1<<TWEN);
+  9a:	84 e8       	ldi	r24, 0x84	; 132
+  9c:	86 bf       	out	0x36, r24	; 54
+	}
+	while((TWCR&(1<<TWINT))==0);
+  9e:	06 b6       	in	r0, 0x36	; 54
+  a0:	07 fe       	sbrs	r0, 7
+  a2:	fd cf       	rjmp	.-6      	; 0x9e <i2c_recieve+0xe>
+	return TWDR;
+  a4:	83 b1       	in	r24, 0x03	; 3
+}
+  a6:	08 95       	ret
+
+000000a8 <main>:
+
+uint8_t i = 0;
+//char sensorVal[8];
+int main(void)
+{
+	DDRA = 0xFF;
+  a8:	8f ef       	ldi	r24, 0xFF	; 255
+  aa:	8a bb       	out	0x1a, r24	; 26
+	i2c_initSlave(0x40);
+  ac:	80 e4       	ldi	r24, 0x40	; 64
+  ae:	0e 94 3e 00 	call	0x7c	; 0x7c <i2c_initSlave>
+	while (1)
+	{
+		i2c_listen();
+  b2:	0e 94 44 00 	call	0x88	; 0x88 <i2c_listen>
+		PORTA = i2c_recieve(1);
+  b6:	81 e0       	ldi	r24, 0x01	; 1
+  b8:	0e 94 48 00 	call	0x90	; 0x90 <i2c_recieve>
+  bc:	8b bb       	out	0x1b, r24	; 27
+  be:	f9 cf       	rjmp	.-14     	; 0xb2 <main+0xa>
+
+000000c0 <_exit>:
+  c0:	f8 94       	cli
+
+000000c2 <__stop_program>:
+  c2:	ff cf       	rjmp	.-2      	; 0xc2 <__stop_program>
